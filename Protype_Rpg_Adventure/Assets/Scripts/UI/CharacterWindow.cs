@@ -79,7 +79,6 @@ public class CharacterWindow : MonoBehaviour
         headerRectTransform.anchoredPosition = new Vector2(32, -22);
         headerRectTransform.sizeDelta = new Vector2(32, 118);
 
-        // set Header Text
         // set HeaderText
         GameObject headerText = new GameObject("Header Text");
         headerText.transform.SetParent(header.transform);
@@ -244,102 +243,36 @@ public class CharacterWindow : MonoBehaviour
         // set Tab Content
         GameObject tabContent = new GameObject("Tab Contents");
         tabContent.transform.SetParent(transform);
-        tabContent.AddComponent<RectTransform>();
         // set Content anchor, position ans size
-        RectTransform tabContentRectTransform = content.GetComponent<RectTransform>();
-        tabContentRectTransform.anchorMin = Vector2.zero;
-        tabContentRectTransform.anchorMax = Vector2.one;
+        RectTransform tabContentRectTransform = tabContent.AddComponent<RectTransform>();
+        tabContentRectTransform.anchorMin = new Vector2(0, 0);
+        tabContentRectTransform.anchorMax = new Vector2(1, 1);
         tabContentRectTransform.pivot = new Vector2(0, 1);
-        tabContentRectTransform.anchoredPosition = Vector2.zero;
-        tabContentRectTransform.sizeDelta = Vector2.zero;
-        SetStatisticsTab(tabContent.transform);
-    }
+        tabContentRectTransform.anchoredPosition = new Vector2(0, 0);
+        tabContentRectTransform.sizeDelta = new Vector2(0, 0);
 
-    private void SetStatisticsTab(Transform parent)
-    {
         // set Statisctics Tab
         GameObject statTab = new GameObject("Tab (Statistics)");
-        statTab.transform.SetParent(parent);
+        statTab.transform.SetParent(tabContent.transform);
         statTab.AddComponent<RectTransform>();
         // set Statistics Tab anchor, position and size
         RectTransform statTabRectTransform = statTab.GetComponent<RectTransform>();
         statTabRectTransform.anchorMin = Vector2.zero;
         statTabRectTransform.anchorMax = Vector2.one;
         statTabRectTransform.pivot = new Vector2(0, 1);
-        statTabRectTransform.anchoredPosition = new Vector2(874, 228);
-        statTabRectTransform.sizeDelta = Vector2.zero;
+        statTabRectTransform.anchoredPosition = new Vector2(874, 228 - (228*2));
+        statTabRectTransform.sizeDelta = new Vector2(-874, -228);
 
-        // set Scroll Bar
-        GameObject scrollBar = new GameObject("Scroll Bar (Vertical)");
-        scrollBar.transform.SetParent(statTab.transform);
-        RectTransform scrollBarRectTransform = scrollBar.AddComponent<RectTransform>();
-        // set Scroll Bar component
-        Scrollbar verticalScroll = scrollBar.AddComponent<Scrollbar>();
-        verticalScroll.navigation = Navigation.defaultNavigation;
-        // set Scroll Bar visual
-        Image scrollBarImg = scrollBar.AddComponent<Image>();
-        scrollBarImg.type = Image.Type.Sliced;
-        scrollBarImg.sprite = Resources.Load<Sprite>("UI/ScrollBarsSliders/ScrollBar_Background");
-        // set Scroll Bar anchor, position and size
-        scrollBarRectTransform.anchorMin = new Vector2(1, 0);
-        scrollBarRectTransform.anchorMax = Vector2.one;
-        scrollBarRectTransform.pivot = Vector2.zero;
-        scrollBarRectTransform.anchoredPosition = new Vector2(-76, 32);
-        scrollBarRectTransform.sizeDelta = new Vector2(12, 58);
-
-        // set Sliding Area
-        GameObject slidingArea = new GameObject("Sliding Area");
-        slidingArea.transform.SetParent(scrollBar.transform);
-        // set Sliding Area anchor, position and size
-        RectTransform slidingAreaRectTransform = slidingArea.AddComponent<RectTransform>();
-        slidingAreaRectTransform.anchorMin = Vector2.zero;
-        slidingAreaRectTransform.anchorMax = Vector2.one;
-        slidingAreaRectTransform.pivot = Vector2.zero;
-        slidingAreaRectTransform.anchoredPosition = Vector2.zero;
-        slidingAreaRectTransform.sizeDelta = Vector2.zero;
-        // set Handle
-        GameObject handle = new GameObject("Handle");
-        handle.transform.SetParent(slidingArea.transform);
-        RectTransform handleRectTransform = handle.AddComponent<RectTransform>();
-        // set Handle visual
-        Image handleImg = handle.AddComponent<Image>();
-        handleImg.type = Image.Type.Sliced;
-        handleImg.sprite = Resources.Load<Sprite>("UI/ScrollBarsSliders/ScrollBar_Handle");
-        // set Handle anchor, position and size
-        handleRectTransform.anchorMin = new Vector2(0, 0.1244573f);
-        handleRectTransform.anchorMax = Vector2.one;
-        handleRectTransform.pivot = new Vector2(0.5f, 0.5f);
-        handleRectTransform.anchoredPosition = Vector2.zero;
-        handleRectTransform.sizeDelta = Vector2.zero;
-        // set Handle Hover Overlay
-        GameObject handleOverlay = new GameObject("Hover Overlay");
-        handleOverlay.transform.SetParent(handle.transform);
-        RectTransform handleOverlayRectTransform = handleOverlay.AddComponent<RectTransform>();
-        // set Handle Hover Overlay visual
-        Image handleOverlayImg = handleOverlay.AddComponent<Image>();
-        handleOverlayImg.type = Image.Type.Sliced;
-        handleOverlayImg.sprite = Resources.Load<Sprite>("UI/ScrollBarsSliders/ScrollBar_Hover");
-        // set Handle Hover Overlay anchor, position and size
-        handleOverlayRectTransform.anchorMin = Vector2.zero;
-        handleOverlayRectTransform.anchorMax = Vector2.one;
-        handleOverlayRectTransform.pivot = Vector2.zero;
-        handleOverlayRectTransform.anchoredPosition = Vector2.zero;
-        handleOverlayRectTransform.sizeDelta = Vector2.zero;
-
-        // set Scrollbar Target Graphic
-        verticalScroll.targetGraphic = handleOverlayImg;
-
-        // set Scroll View
-        GameObject scrollView = new GameObject("Scroll View");
-        scrollView.transform.SetParent(statTab.transform);
-        RectTransform scrollViewRectTransform = scrollView.AddComponent<RectTransform>();
-        // set Scroll Rect component
-        ScrollRect scrollRect = scrollView.AddComponent<ScrollRect>();
-        scrollRect.horizontal = false;
-        scrollRect.scrollSensitivity = 26;
-        scrollRect.viewport = scrollViewRectTransform;
-        scrollRect.verticalScrollbar = verticalScroll;
-        scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+        // set Stats Content
+        GameObject statsContent = Instantiate(Resources.Load<GameObject>("Prefabs/UI/StatsContent"));
+        statsContent.gameObject.name = "Content";
+        statsContent.transform.SetParent(statTab.transform);
+        RectTransform statsContentRectTransform = statsContent.GetComponent<RectTransform>();
+        statsContentRectTransform.anchorMin = new Vector2(0, 1);
+        statsContentRectTransform.anchorMax = new Vector2(1, 1);
+        statsContentRectTransform.pivot = new Vector2(0, 1);
+        statsContentRectTransform.anchoredPosition = new Vector2(0, -32);
+        statsContentRectTransform.sizeDelta = new Vector2(76, 1382);
     }
 
     private GameObject CreateLayoutGroup(string name, Transform parent, Vector2 anchoredPosition, Vector2 size, ESlotsPart part)

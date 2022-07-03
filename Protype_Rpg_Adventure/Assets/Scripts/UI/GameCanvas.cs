@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameCanvas : MonoBehaviour
 {
@@ -36,23 +37,34 @@ public class GameCanvas : MonoBehaviour
         m_GraphicRaycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
 
         // create Unity Frame
-        UnitFrame unitFrame = Instantiate(Resources.Load<UnitFrame>("Prefabs/UI/UnitFrame"), new Vector3(), Quaternion.identity);
+        UnitFrame unitFrame = Instantiate(Resources.Load<UnitFrame>("Prefabs/UI/UnitFrame"));
         unitFrame.transform.SetParent(m_Canvas.transform);
         unitFrame.CreateUnitFrame();
 
         // create Inventory Window
-        InventoryWindow invWindow = Instantiate(Resources.Load<InventoryWindow>("Prefabs/UI/InventoryWindow"), new Vector3(), Quaternion.identity);
+        InventoryWindow invWindow = Instantiate(Resources.Load<InventoryWindow>("Prefabs/UI/InventoryWindow"));
         invWindow.transform.SetParent(m_Canvas.transform);
         invWindow.CreateInventory();
         
         // create Character Window
-        CharacterWindow charWindow = Instantiate(Resources.Load<CharacterWindow>("Prefabs/UI/CharacterWindow"), new Vector3(), Quaternion.identity);
+        CharacterWindow charWindow = Instantiate(Resources.Load<CharacterWindow>("Prefabs/UI/CharacterWindow"));
         charWindow.transform.SetParent(m_Canvas.transform);
         charWindow.CreateCharacterWindow();
 
         // create Action Bar
-        ActionBar actionBar = Instantiate(Resources.Load<ActionBar>("Prefabs/UI/ActionBar"), new Vector3(), Quaternion.identity);
+        ActionBar actionBar = Instantiate(Resources.Load<ActionBar>("Prefabs/UI/ActionBar"));
         actionBar.transform.SetParent(m_Canvas.transform);
         actionBar.CreateActionBar();
+
+        // create Spell Book Window
+        SpellBookWindow spellBook = Instantiate(Resources.Load<SpellBookWindow>("Prefabs/UI/SpellBookWindow"));
+        spellBook.transform.SetParent(m_Canvas.transform);
+        spellBook.CreateSpellBookWindow();
+
+        // create Event System
+        GameObject eventSystObj = new GameObject("EventSystem");
+        eventSystObj.AddComponent<EventSystem>();
+        eventSystObj.AddComponent<StandaloneInputModule>();
+        eventSystObj.transform.SetParent(transform);
     }
 }
