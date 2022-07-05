@@ -51,15 +51,15 @@ public class GameCanvas : MonoBehaviour
         charWindow.transform.SetParent(m_Canvas.transform);
         charWindow.CreateCharacterWindow();
 
-        // create Action Bar
-        ActionBar actionBar = Instantiate(Resources.Load<ActionBar>("Prefabs/UI/ActionBar"));
-        actionBar.transform.SetParent(m_Canvas.transform);
-        actionBar.CreateActionBar();
-
         // create Spell Book Window
         SpellBookWindow spellBook = Instantiate(Resources.Load<SpellBookWindow>("Prefabs/UI/SpellBookWindow"));
         spellBook.transform.SetParent(m_Canvas.transform);
         spellBook.CreateSpellBookWindow();
+        
+        // create Action Bar
+        ActionBar actionBar = Instantiate(Resources.Load<ActionBar>("Prefabs/UI/ActionBar"));
+        actionBar.transform.SetParent(m_Canvas.transform);
+        actionBar.CreateActionBar();
 
         // create Event System
         GameObject eventSystObj = new GameObject("EventSystem");
