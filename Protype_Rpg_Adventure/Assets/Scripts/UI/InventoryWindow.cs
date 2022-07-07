@@ -25,9 +25,14 @@ public class InventoryWindow : MonoBehaviour
         // set Header
         UI.CreateHeader(transform, "INVENTORY", new Vector2(-64, 92), new Vector2(-64, 48), m_HeaderTextColor);
 
-        // TO DO - ADD BUTTON EVENT
-        UI.CreateButtonClose(transform);
         SetContent();
+
+        // set UIWindow component and Input Handler to toggle the Window
+        UIWindow window = gameObject.AddComponent<UIWindow>();
+        UIWindowInputHandler inputHandler = gameObject.AddComponent<UIWindowInputHandler>();
+        inputHandler.Key = KeyCode.I;
+        // Add Close Button and add event
+        UI.CreateButtonClose(transform, inputHandler.HideWindow);
     }
 
     private void SetContent()
@@ -68,6 +73,6 @@ public class InventoryWindow : MonoBehaviour
         Image slotImg = slot.AddComponent<Image>();
         slotImg.sprite = Resources.Load<Sprite>("UI/Inventory/Inventory_Slot_Background");
 
-        UI.CreateSlotOverlay(slot.transform);
+        UI.AddSlotOverlay(slot.transform);
     }
 }

@@ -11,7 +11,9 @@ public class GameCanvas : MonoBehaviour
     private CanvasScaler m_CanvasScaler;
     private GraphicRaycaster m_GraphicRaycaster;
 
-    private void Start()
+    private UIWindowInputHandler[] m_Windows;
+
+    private void Awake()
     {
         // Create the gameobject
         m_CanvasObj = new GameObject("Game Canvas");
@@ -66,5 +68,16 @@ public class GameCanvas : MonoBehaviour
         eventSystObj.AddComponent<EventSystem>();
         eventSystObj.AddComponent<StandaloneInputModule>();
         eventSystObj.transform.SetParent(transform);
+
+        // set Windows Key Event
+        m_Windows = FindObjectsOfType<UIWindowInputHandler>();
+        UIElementKeyAction elemKeyAction = gameObject.AddComponent<UIElementKeyAction>();
+        elemKeyAction.keyCode = KeyCode.Escape;
+        foreach(UIWindowInputHandler window in m_Windows)
+        {
+            elemKeyAction.keyActions += () => {
+                window.HideWindow();
+            };
+        }
     }
 }

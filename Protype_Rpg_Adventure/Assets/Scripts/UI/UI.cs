@@ -3,6 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum EFont
+{
+    arialbd,
+    KhmerUI,
+    KhmerUIb,
+    MKX_Title,
+}
+public enum ESlotsPart
+{
+    Left,
+    Right,
+    Bottom,
+}
+public enum ELeftSlots
+{
+    Head,
+    Necklace,
+    Shoulders,
+    Chest,
+    Shirt,
+    Bracers,
+
+    Count
+}
+public enum ERightSlots
+{
+    Gloves,
+    Belt,
+    Pants,
+    Boots,
+    Finger,
+    Trinket,
+
+    Count
+}
+public enum EBottomSlots
+{
+    Main,
+    Off,
+    Count
+}
+
 public static class UI
 {
     public static void SetRectTransform(GameObject obj, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 sizeDelta)
@@ -34,12 +76,7 @@ public static class UI
         GameObject headerText = new GameObject("Header Text");
         headerText.transform.SetParent(header.transform);
         // set Header Text component
-        Text text = headerText.AddComponent<Text>();
-        text.text = title;
-        text.font = Resources.Load<Font>("Fonts/MKX_Title");
-        text.fontSize = 44;
-        text.alignment = TextAnchor.UpperCenter;
-        text.color = color;
+        AddTextComponent(headerText, title, 44, color, EFont.MKX_Title);
         // set Header Text anchor, position and size
         SetRectTransform(headerText, new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1), new Vector2(32, -22), headerTextSizeDelta);
         // set Header Text Content Size Filter component
@@ -83,7 +120,7 @@ public static class UI
         }
     }
 
-    public static void CreateSlotOverlay(Transform parent)
+    public static void AddSlotOverlay(Transform parent)
     {
         // set Slot Hover Overlay
         GameObject hoverOverlay = new GameObject("Hover Overlay");
@@ -93,6 +130,7 @@ public static class UI
         Image hoverOverlayImg = hoverOverlay.AddComponent<Image>();
         hoverOverlayImg.sprite = Resources.Load<Sprite>("UI/Character_Window/Slots/CharacterWindow_Slot_Hover");
         // set Slot Hover Overlay anchor, position and size
+        //SetRectTransform(hoverOverlay, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(8, -8), new Vector2(-16, -16));
         SetRectTransform(hoverOverlay, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(8, -8), new Vector2(-16, -16));
 
         // set Slot Press Overlay
@@ -106,8 +144,19 @@ public static class UI
         SetRectTransform(pressOverlay, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(8, -8), new Vector2(-16, -16));
     }
 
-    public static void AddTextComponent()
+    public static void AddTextComponent(GameObject obj, string text, int fontSize, Color color, EFont font, TextAnchor textAnchor = TextAnchor.UpperCenter)
     {
-        
+        Text txt = obj.AddComponent<Text>();
+        txt.text = text;
+        txt.fontSize = fontSize;
+        txt.color = color;
+        switch (font)
+        {
+            case EFont.arialbd: txt.font = Resources.Load<Font>("Fonts/arialbd"); break;
+            case EFont.KhmerUI: txt.font = Resources.Load<Font>("Fonts/KhmerUI"); break;
+            case EFont.KhmerUIb: txt.font = Resources.Load<Font>("Fonts/KhmerUIb"); break;
+            case EFont.MKX_Title: txt.font = Resources.Load<Font>("Fonts/MKX_Title"); break;
+        }
+        txt.alignment = textAnchor;
     }
 }

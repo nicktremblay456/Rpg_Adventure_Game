@@ -12,12 +12,7 @@ public class ActionBar : MonoBehaviour
         // rename game object
         gameObject.name = "Action Bar";
         // set anchor, position and size of the Action Bar
-        RectTransform actionBarRectTransform = GetComponent<RectTransform>();
-        actionBarRectTransform.anchorMin = new Vector2(0.5f, 0);
-        actionBarRectTransform.anchorMax = new Vector2(0.5f, 0);
-        actionBarRectTransform.pivot = new Vector2(0.5f, 1);
-        actionBarRectTransform.anchoredPosition = new Vector2(0, 152);
-        actionBarRectTransform.sizeDelta = new Vector2(720, 152);
+        UI.SetRectTransform(gameObject, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0.5f, 1), new Vector2(0, 152), new Vector2(720, 152));
 
         SetMainBar();
     }
@@ -34,12 +29,7 @@ public class ActionBar : MonoBehaviour
         //mainBarImage.fillCenter = true;
         mainBarImage.sprite = Resources.Load<Sprite>("UI/ActionBar/ActionBar_Main_Background");
         // set Main Bar anchor, position and size
-        RectTransform mainBarRectTransform = mainBarObj.GetComponent<RectTransform>();
-        mainBarRectTransform.anchorMin = new Vector2(0, 1);
-        mainBarRectTransform.anchorMax = new Vector2(1, 1);
-        mainBarRectTransform.pivot = new Vector2(0, 1);
-        mainBarRectTransform.anchoredPosition = new Vector2(0, -20);
-        mainBarRectTransform.sizeDelta = new Vector2(0, 132);
+        UI.SetRectTransform(mainBarObj, new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1), new Vector2(0, -20), new Vector2(0, 132));
 
         // set Slots Grid
         GameObject slotsGrid = new GameObject("Slots Grid");
@@ -53,12 +43,7 @@ public class ActionBar : MonoBehaviour
         ContentSizeFitter contentSizeFilter = slotsGrid.AddComponent<ContentSizeFitter>();
         contentSizeFilter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
         // set Grid anchor, position and size
-        RectTransform slotsGridRectTransform = slotsGrid.GetComponent<RectTransform>();
-        slotsGridRectTransform.anchorMin = new Vector2(0, 1);
-        slotsGridRectTransform.anchorMax = new Vector2(0, 1);
-        slotsGridRectTransform.pivot = new Vector2(0, 1);
-        slotsGridRectTransform.anchoredPosition = new Vector2(100, -20);
-        slotsGridRectTransform.sizeDelta = new Vector2(520, 104);
+        UI.SetRectTransform(slotsGrid, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1), new Vector2(100, -20), new Vector2(520, 104));
 
         for (int i = 0; i < 5; i++)
         {
@@ -75,53 +60,15 @@ public class ActionBar : MonoBehaviour
         Image slotImg = slot.AddComponent<Image>();
         slotImg.sprite = Resources.Load<Sprite>("UI/ActionBar/Slots/ActionBar_Slot_Background");
 
-        // set Slot Hover Overlay
-        GameObject hoverOverlay = new GameObject("Hover Overlay");
-        hoverOverlay.transform.SetParent(slot.transform);
-        hoverOverlay.AddComponent<RectTransform>();
-        // set Slot Hover Overlay visual
-        Image hoverOverlayImg = hoverOverlay.AddComponent<Image>();
-        hoverOverlayImg.type = Image.Type.Sliced;
-        hoverOverlayImg.sprite = Resources.Load<Sprite>("UI/ActionBar/Slots/ActionBar_Slot_Hover");
-        // set Slot Hover Overlay anchor, position and size
-        RectTransform hoverOverlayRectTransform = hoverOverlay.GetComponent<RectTransform>();
-        hoverOverlayRectTransform.anchorMin = new Vector2(0, 0);
-        hoverOverlayRectTransform.anchorMax = new Vector2(1, 1);
-        hoverOverlayRectTransform.pivot = new Vector2(0.5f, 0.5f);
-        hoverOverlayRectTransform.anchoredPosition = new Vector2(0, 0);
-        hoverOverlayRectTransform.sizeDelta = new Vector2(0, 0);
-
-        // set Slot Press Overlay
-        GameObject pressOverlay = new GameObject("Press Overlay");
-        pressOverlay.transform.SetParent(slot.transform);
-        pressOverlay.AddComponent<RectTransform>();
-        // set Slot Press Overlay visual
-        Image pressOverlayImg = pressOverlay.AddComponent<Image>();
-        pressOverlayImg.type = Image.Type.Sliced;
-        pressOverlayImg.sprite = Resources.Load<Sprite>("UI/ActionBar/Slots/ActionBar_Slot_Press");
-        // set Slot Press Overlay anchor, position and size
-        RectTransform pressOverlayRectTransform = pressOverlay.GetComponent<RectTransform>();
-        pressOverlayRectTransform.anchorMin = new Vector2(0, 0);
-        pressOverlayRectTransform.anchorMax = new Vector2(1, 1);
-        pressOverlayRectTransform.pivot = new Vector2(0.5f, 0.5f);
-        pressOverlayRectTransform.anchoredPosition = new Vector2(0, 0);
-        pressOverlayRectTransform.sizeDelta = new Vector2(0 , 0);
+        // set Hover and Press Overlay
+        UI.AddSlotOverlay(slot.transform);
 
         // set Hotkey
         GameObject hotKey = new GameObject("Hotkey");
         hotKey.transform.SetParent(slot.transform);
         // set Hotkey Text
-        Text hotKeyText = hotKey.AddComponent<Text>();
-        hotKeyText.text = $"{index + 1}";
-        hotKeyText.font = Resources.Load<Font>("Fonts/KhmerUIb");
-        hotKeyText.fontSize = 22;
-        hotKeyText.color = m_HotkeyTextColor;
+        UI.AddTextComponent(hotKey, $"{index + 1}", 22, m_HotkeyTextColor, EFont.KhmerUIb, TextAnchor.UpperLeft);
         // set Hotkey Text anchore, position and size
-        RectTransform hotKeyRectTransform = hotKey.GetComponent<RectTransform>();
-        hotKeyRectTransform.anchorMin = new Vector2(0, 1);
-        hotKeyRectTransform.anchorMax = new Vector2(1, 1);
-        hotKeyRectTransform.pivot = new Vector2(0, 1);
-        hotKeyRectTransform.anchoredPosition = new Vector2(14, -68);
-        hotKeyRectTransform.sizeDelta = new Vector2(14, 32);
+        UI.SetRectTransform(hotKey, new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1), new Vector2(14, -68), new Vector2(14, 32));
     }
 }

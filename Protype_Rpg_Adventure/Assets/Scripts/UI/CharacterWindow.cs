@@ -3,44 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum ESlotsPart
-{
-    Left,
-    Right,
-    Bottom,
-}
-
-public enum ELeftSlots
-{
-    Head,
-    Necklace,
-    Shoulders,
-    Chest,
-    Shirt,
-    Bracers,
-
-    Count
-}
-
-public enum ERightSlots
-{
-    Gloves,
-    Belt,
-    Pants,
-    Boots,
-    Finger,
-    Trinket,
-
-    Count
-}
-
-public enum EBottomSlots
-{
-    Main,
-    Off,
-    Count
-}
-
 public class CharacterWindow : MonoBehaviour
 {
     [SerializeField] private Color m_HeaderTextColor;
@@ -63,9 +25,14 @@ public class CharacterWindow : MonoBehaviour
         // set Header
         UI.CreateHeader(transform, "CHARACTER", new Vector2(32, 118), new Vector2(-64, 56), m_HeaderTextColor);
 
-        // TO DO - ADD BUTTON EVENT
-        UI.CreateButtonClose(transform);
         SetContent();
+
+        // set UIWindow component and Input Handler to toggle the Window
+        UIWindow window = gameObject.AddComponent<UIWindow>();
+        UIWindowInputHandler inputHandler = gameObject.AddComponent<UIWindowInputHandler>();
+        inputHandler.Key = KeyCode.C;
+        // Add Close Button and add event
+        UI.CreateButtonClose(transform, inputHandler.HideWindow);
     }
 
     private void SetContent()
@@ -212,6 +179,6 @@ public class CharacterWindow : MonoBehaviour
                 break;
         }
 
-        UI.CreateSlotOverlay(slot.transform);
+        UI.AddSlotOverlay(slot.transform);
     }
 }

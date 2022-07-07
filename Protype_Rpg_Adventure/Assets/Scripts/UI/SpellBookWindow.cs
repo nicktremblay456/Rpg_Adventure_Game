@@ -9,6 +9,8 @@ public class SpellBookWindow : MonoBehaviour
 
     private Button m_ButtonClose;
 
+    private Transform m_SpellSlotParent;
+
     public void CreateSpellBookWindow()
     {
         // rename game object
@@ -31,9 +33,14 @@ public class SpellBookWindow : MonoBehaviour
         // set Tab Contents anchor, position and size
         UI.SetRectTransform(tabContent, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(0, 0), new Vector2(0, 0));
 
-        // TO DO - ADD BUTTON EVENT
-        UI.CreateButtonClose(transform);
         SetSpellTab(tabContent.transform);
+
+        // set UIWindow component and Input Handler to toggle the Window
+        UIWindow window = gameObject.AddComponent<UIWindow>();
+        UIWindowInputHandler inputHandler = gameObject.AddComponent<UIWindowInputHandler>();
+        inputHandler.Key = KeyCode.B;
+        // Add Close Button and add event
+        UI.CreateButtonClose(transform, inputHandler.HideWindow);
     }
 
     private void SetSpellTab(Transform parent)
@@ -49,6 +56,16 @@ public class SpellBookWindow : MonoBehaviour
         scrollView.gameObject.name = "Scroll View";
         scrollView.transform.SetParent(spellTab.transform);
         // set Scroll View anchor, position and size
-        UI.SetRectTransform(scrollView, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(62, 266 - (266*2)), new Vector2(112, 58));
+        UI.SetRectTransform(scrollView, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(62, 266 - (266*2)), new Vector2(112 - 286, 58 - 382));
+    
+        // set Scroll Bar
+        GameObject scrollBar = Instantiate(Resources.Load<GameObject>("Prefabs/UI/SpellScrollBar"));
+        scrollBar.gameObject.name = "Scroll Bar (Vertical)";
+        scrollBar.transform.SetParent(spellTab.transform);
+        // set Scroll Bar anchor, position and size
+        UI.SetRectTransform(scrollBar, new Vector2(1, 0), new Vector2(1, 1), new Vector2(1, 1), new Vector2(-62, 266 - (266*2)), new Vector2(12, 58 - 382));
+
+        // get the child gameobject named Content
+        m_SpellSlotParent = scrollBar.transform.GetChild(0).transform;
     }
 }
