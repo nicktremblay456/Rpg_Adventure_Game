@@ -8,11 +8,10 @@ public class PlayerController : MonoBehaviour
     #region Variables/Props
     [Header("Player Settings")]
     [SerializeField] private float m_RunSpeed = 10f;
-    [SerializeField] private float m_SprintSpeed = 15f;
+    [SerializeField] private float m_WaterSpeed = 5f;
     [SerializeField] private float m_RunAcceleration = 5f;
     [SerializeField] private float m_TurnSpeed = 10f;
     [SerializeField] private float m_JumpForce = 650f;
-    [SerializeField] private float m_RollingForce = 200f;
     [SerializeField] private float m_Gravity = 20f;
     
     [SerializeField] private float m_MaxGroundAngle = 45f;
@@ -37,8 +36,8 @@ public class PlayerController : MonoBehaviour
     private RaycastHit m_HitInfo;
 
     private bool m_IsAttacking = false;
-    private bool m_IsSprinting = false;
     private bool m_IsRunning = false;
+    private bool m_IsInWater = false;
     //private bool m_IsWalkable = true;
     private bool m_IsDead = false;
 
@@ -66,10 +65,7 @@ public class PlayerController : MonoBehaviour
     private readonly int m_HashAttackOne = Animator.StringToHash("Attack_1");
     private readonly int m_HashAttackTwo = Animator.StringToHash("Attack_2");
     private readonly int m_HashAttackThree = Animator.StringToHash("Attack_3");
-    private readonly int m_HashDrink = Animator.StringToHash("Drink");
-    private readonly int m_HashJumpAttack = Animator.StringToHash("JumpAttack");
     private readonly int m_HashDeath = Animator.StringToHash("Death");
-    private readonly int m_HashRoll = Animator.StringToHash("Roll");
     #endregion
 
     #region Mono Methods
@@ -111,8 +107,11 @@ public class PlayerController : MonoBehaviour
         //    DrawDebugLines();
         //}
     }
-
-    private void FixedUpdate ()
+    
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    private void FixedUpdate()
     {
         // Physics
         if (m_Input.MoveInput != Vector2.zero && !m_IsAttacking)
@@ -130,6 +129,30 @@ public class PlayerController : MonoBehaviour
             m_MoveDirection.y -= m_Gravity * Time.fixedDeltaTime;
         }
         m_RigidBody.velocity = m_MoveDirection;
+    }
+
+    /// <summary>
+    /// OnTriggerEnter is called when the Collider other enters the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (0 != (LayerMask.GetMask("Water") & 1 << other.gameObject.layer)) {
+            m_IsInWater = true;
+            ResetSpeed();
+        }
+    }
+
+    /// <summary>
+    /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    private void OnTriggerExit(Collider other)
+    {
+        if (0 != (LayerMask.GetMask("Water") & 1 << other.gameObject.layer)) {
+            m_IsInWater = false;
+            ResetSpeed();
+        }
     }
     #endregion
 
@@ -224,13 +247,14 @@ public class PlayerController : MonoBehaviour
     {
         if (m_GroundAngle < m_MaxGroundAngle + 90f)
         {
-            if (m_IsSprinting && m_CurrentSpeed < m_SprintSpeed)
-            {
-                m_CurrentSpeed += m_SprintSpeed * (m_RunAcceleration * Time.fixedDeltaTime);
-            }
-            else if (m_CurrentSpeed < m_RunSpeed)
+            if (m_CurrentSpeed < m_RunSpeed && !m_IsInWater)
             {
                 m_CurrentSpeed += m_RunSpeed * (m_RunAcceleration * Time.fixedDeltaTime);
+                if (!m_IsRunning) m_IsRunning = true;
+            }
+            else if (m_CurrentSpeed < m_WaterSpeed && m_IsInWater)
+            {
+                m_CurrentSpeed += m_WaterSpeed * (m_RunAcceleration * Time.fixedDeltaTime);
                 if (!m_IsRunning) m_IsRunning = true;
             }
         }
@@ -239,7 +263,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump ()
     {
-        if (IsGrounded)
+        if (IsGrounded && m_GroundAngle < m_MaxGroundAngle + 90f)
         {
             m_RigidBody.AddForce(transform.up * m_JumpForce);
         }
@@ -249,7 +273,6 @@ public class PlayerController : MonoBehaviour
     {
         m_CurrentSpeed = 0f;
         if (m_IsRunning) m_IsRunning = false;
-        if (m_IsSprinting) m_IsSprinting = false;
     }
 
     public void Death ()
